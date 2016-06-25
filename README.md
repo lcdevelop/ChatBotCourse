@@ -10,3 +10,4 @@ ChatBotCourse
  * [自己动手做聊天机器人 六-教你怎么从一句话里提取出十句话的信息](http://www.shareditor.com/blogshow/?blogId=70)(2016-06-22)
  * [自己动手做聊天机器人 七-文法分析还是基于特征好啊](http://www.shareditor.com/blogshow/?blogId=71)(2016-06-23)
  * [自己动手做聊天机器人 八-重温自然语言处理](http://www.shareditor.com/blogshow/?blogId=72)(2016-06-24)
+ * [自己动手做聊天机器人 九-聊天机器人应该怎么做](http://www.shareditor.com/blogshow/?blogId=73)(2016-06-25)
