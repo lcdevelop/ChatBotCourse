@@ -1,7 +1,7 @@
 ChatBotCourse
 ==============
 _欢迎关注我的另外两个项目_
- * _教你成为全栈工程师_
+ * [_教你成为全栈工程师_](https://github.com/warmheartli/ChatBotCourse)
  * _机器学习精简入门教程_
 
 自己动手做聊天机器人教程
