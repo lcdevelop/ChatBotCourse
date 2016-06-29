@@ -1,10 +1,10 @@
 ChatBotCourse
 ==============
-自己动手做聊天机器人教程
-==============
 _欢迎关注我的另外两个项目_
  * _教你成为全栈工程师_
  * _机器学习精简入门教程_
+自己动手做聊天机器人教程
+==============
  * [自己动手做聊天机器人 一-涉及知识](http://www.shareditor.com/blogshow/?blogId=63)(2016-06-09)
  * [自己动手做聊天机器人 二-初识NLTK库](http://www.shareditor.com/blogshow/?blogId=64)(2016-06-10)
  * [自己动手做聊天机器人 三-语料与词汇资源](http://www.shareditor.com/blogshow/?blogId=65)(2016-06-12)
