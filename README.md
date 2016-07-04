@@ -17,3 +17,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 九-聊天机器人应该怎么做](http://www.shareditor.com/blogshow/?blogId=73)(2016-06-25)
  * [自己动手做聊天机器人 十-半个小时搞定词性标注与关键词提取](http://www.shareditor.com/blogshow/?blogId=74)(2016-06-28)
  * [自己动手做聊天机器人 十一-0字节存储海量语料资源](http://www.shareditor.com/blogshow/?blogId=76)(2016-07-01)
+ * [自己动手做聊天机器人 十二-教你如何利用强大的中文语言技术平台做依存句法和语义依存分析](http://www.shareditor.com/blogshow/?blogId=77)(2016-07-04)
