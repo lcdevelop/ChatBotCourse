@@ -20,3 +20,5 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 十二-教你如何利用强大的中文语言技术平台做依存句法和语义依存分析](http://www.shareditor.com/blogshow/?blogId=77)(2016-07-04)
  * [自己动手做聊天机器人 十三-把语言模型探究到底](http://www.shareditor.com/blogshow/?blogId=78)(2016-07-05)
  * [自己动手做聊天机器人 十四-探究中文分词的艺术](http://www.shareditor.com/blogshow/?blogId=80)(2016-07-06)
+ * [自己动手做聊天机器人 十五-一篇文章读懂拿了图灵奖和诺贝尔奖的概率图模型](http://www.shareditor.com/blogshow/?blogId=81)(2016-07-09)
+ * [自己动手做聊天机器人 十六-大话自然语言处理中的囊中取物](http://www.shareditor.com/blogshow/?blogId=82)(2016-07-09)
