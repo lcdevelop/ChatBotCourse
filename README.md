@@ -23,3 +23,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 十五-一篇文章读懂拿了图灵奖和诺贝尔奖的概率图模型](http://www.shareditor.com/blogshow/?blogId=81)(2016-07-09)
  * [自己动手做聊天机器人 十六-大话自然语言处理中的囊中取物](http://www.shareditor.com/blogshow/?blogId=82)(2016-07-09)
  * [自己动手做聊天机器人 十七-让机器做词性自动标注的具体方法](http://www.shareditor.com/blogshow/?blogId=86)(2016-07-15)
+ * [自己动手做聊天机器人 十八-神奇算法之句法分析树的生成](http://www.shareditor.com/blogshow/?blogId=87)(2016-07-19)
