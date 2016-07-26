@@ -26,3 +26,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 十八-神奇算法之句法分析树的生成](http://www.shareditor.com/blogshow/?blogId=87)(2016-07-19)
  * [自己动手做聊天机器人 十九-机器人是怎么理解“日后再说”的](http://www.shareditor.com/blogshow/?blogId=88)(2016-07-21)
  * [自己动手做聊天机器人 二十-语义角色标注的基本方法](http://www.shareditor.com/blogshow/?blogId=89)(2016-07-22)
+ * [自己动手做聊天机器人 二十一-比TF-IDF更好的隐含语义索引模型是个什么鬼](http://www.shareditor.com/blogshow/?blogId=90)(2016-07-26)
