@@ -65,6 +65,8 @@ int read_images()
     copy_int(&rows, &head[8]);
     copy_int(&cols, &head[12]);
 
+    printf("rows=%d cols=%d\n", rows, cols);
+
     uint64_t image_size = rows * cols;
     uint64_t values_size = sizeof(unsigned char) * images_num * rows * cols;
     unsigned char *values = (unsigned char*)malloc(values_size);
