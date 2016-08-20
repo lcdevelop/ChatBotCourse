@@ -34,3 +34,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 二十二-神奇算法之人工神经网络](http://www.shareditor.com/blogshow/?blogId=92)(2016-08-01)
  * [自己动手做聊天机器人 二十三-用CNN做深度学习](http://www.shareditor.com/blogshow/?blogId=97)(2016-08-12)
  * [自己动手做聊天机器人 二十四-将深度学习应用到NLP](http://www.shareditor.com/blogshow/?blogId=99)(2016-08-18)
+ * [自己动手做聊天机器人 二十五-google的文本挖掘深度学习工具word2vec的实现原理](http://www.shareditor.com/blogshow/?blogId=100)(2016-08-20)
