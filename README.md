@@ -38,3 +38,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 二十六-图解递归神经网络(RNN)](http://www.shareditor.com/blogshow/?blogId=103)(2016-08-25)
  * [自己动手做聊天机器人 二十七-用深度学习来做自动问答的一般方法](http://www.shareditor.com/blogshow/?blogId=104)(2016-08-26)
  * [自己动手做聊天机器人 二十八-脑洞大开：基于美剧字幕的聊天语料库建设方案](http://www.shareditor.com/blogshow/?blogId=105)(2016-08-30)
+ * [自己动手做聊天机器人 二十九-重磅：近1GB的三千万聊天语料供出](http://www.shareditor.com/blogshow/?blogId=112)(2016-09-18)
