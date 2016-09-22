@@ -48,7 +48,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 public class Action {
 	
-	private static final int MAX_RESULT = 20;
+	private static final int MAX_RESULT = 10;
 	private static final int MAX_TOTAL_HITS = 1000000;
 	private static IndexSearcher indexSearcher = null;
 	
@@ -68,8 +68,14 @@ public class Action {
 		QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
 		Map<String, List<String>> mapParameters = qsd.parameters();
 		List<String> l = mapParameters.get("q");
+		List<String> clientIps = mapParameters.get("clientIp");
+		if (null != clientIps && clientIps.size() == 1) {
+			String clientIp = clientIps.get(0);
+			System.out.println("clientIp=" + clientIp);
+		}
 		if (null != l && l.size() == 1) {
 			String q = l.get(0);
+			System.out.println("question=" + q);
 			Query query = null;
 			PriorityQueue<ScoreDoc> pq = new PriorityQueue<ScoreDoc>(MAX_RESULT) {
 				
@@ -88,7 +94,7 @@ public class Action {
 			if (topDocs.totalHits == 0) {
 				qp.setDefaultOperator(Operator.AND);
 				query = qp.parse(q);
-				System.out.println(query.toString());
+				System.out.println("lucene query=" + query.toString());
 				indexSearcher.search(query, collector);
 				topDocs = collector.topDocs();
 			}
@@ -96,7 +102,7 @@ public class Action {
 			if (topDocs.totalHits == 0) {
 				qp.setDefaultOperator(Operator.OR);
 				query = qp.parse(q);
-				System.out.println(query.toString());
+				System.out.println("lucene query=" + query.toString());
 				indexSearcher.search(query, collector);
 				topDocs = collector.topDocs();
 			}
@@ -117,6 +123,7 @@ public class Action {
 				result.add(item);
 			}
 			ret.put("result", result);
+			System.out.println("response=" + ret);
 			buf = Unpooled.copiedBuffer(ret.toJSONString().getBytes());
 		} else {
 			buf = Unpooled.copiedBuffer("error".getBytes());
