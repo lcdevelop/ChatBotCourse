@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -48,6 +49,8 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 
 public class Action {
 	
+	private static final Logger log = Logger.getLogger(Action.class);
+	
 	private static final int MAX_RESULT = 10;
 	private static final int MAX_TOTAL_HITS = 1000000;
 	private static IndexSearcher indexSearcher = null;
@@ -55,7 +58,7 @@ public class Action {
 	static {
 		IndexReader reader = null;
 		try {
-			reader = DirectoryReader.open(FSDirectory.open(new File("/Users/lichuang/Developer/ChatBotCourse/chatbotv1/index")));
+			reader = DirectoryReader.open(FSDirectory.open(new File("./index")));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -71,11 +74,11 @@ public class Action {
 		List<String> clientIps = mapParameters.get("clientIp");
 		if (null != clientIps && clientIps.size() == 1) {
 			String clientIp = clientIps.get(0);
-			System.out.println("clientIp=" + clientIp);
+			log.info("clientIp=" + clientIp);
 		}
 		if (null != l && l.size() == 1) {
 			String q = l.get(0);
-			System.out.println("question=" + q);
+			log.info("question=" + q);
 			Query query = null;
 			PriorityQueue<ScoreDoc> pq = new PriorityQueue<ScoreDoc>(MAX_RESULT) {
 				
@@ -94,7 +97,7 @@ public class Action {
 			if (topDocs.totalHits == 0) {
 				qp.setDefaultOperator(Operator.AND);
 				query = qp.parse(q);
-				System.out.println("lucene query=" + query.toString());
+				log.info("lucene query=" + query.toString());
 				indexSearcher.search(query, collector);
 				topDocs = collector.topDocs();
 			}
@@ -102,7 +105,7 @@ public class Action {
 			if (topDocs.totalHits == 0) {
 				qp.setDefaultOperator(Operator.OR);
 				query = qp.parse(q);
-				System.out.println("lucene query=" + query.toString());
+				log.info("lucene query=" + query.toString());
 				indexSearcher.search(query, collector);
 				topDocs = collector.topDocs();
 			}
@@ -123,7 +126,7 @@ public class Action {
 				result.add(item);
 			}
 			ret.put("result", result);
-			System.out.println("response=" + ret);
+			log.info("response=" + ret);
 			buf = Unpooled.copiedBuffer(ret.toJSONString().getBytes());
 		} else {
 			buf = Unpooled.copiedBuffer("error".getBytes());
