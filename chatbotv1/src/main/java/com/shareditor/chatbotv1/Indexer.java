@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -20,7 +24,19 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class Indexer 
 {
-    public static void main( String[] args ) throws IOException
+	
+	public static final Charset UTF8 = Charset.forName("utf8");
+
+	public static String hexString(byte[] b) {
+		String ret = "";
+		for (int i = 0; i < b.length; i++) {
+			String hex = Integer.toHexString(b[i] & 0xF);
+			ret += hex.toUpperCase();
+		}
+		return ret;
+	}
+	
+    public static void main( String[] args ) throws IOException, NoSuchAlgorithmException
     {
         if (args.length != 2) {
         	System.err.println("Usage: " + Indexer.class.getSimpleName() + " corpus_path index_path");
@@ -41,7 +57,17 @@ public class Indexer
         String line = "";
         String last = "";
         long lineNum = 0;
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        HashSet<String> mc = new HashSet<String>();
+        int dupCount = 0;
+        int totalCount = 0;
+        long last_t = 0;
         while ((line = br.readLine()) != null) {
+        	totalCount++;
+        	if (totalCount % 15000000 == 0) {
+        		System.out.println("clear set");
+        		mc.clear();
+        	}
         	line = line.trim();
         	
         	if (0 == line.length()) {
@@ -49,6 +75,17 @@ public class Indexer
         	}
         	
         	if (!last.equals("")) {
+        		String pair = last + line;
+        		
+        		byte[] md5 = md.digest(pair.getBytes(UTF8));
+        		String md5_str = hexString(md5);
+        		
+        		if (mc.contains(md5_str)) {
+        			dupCount++;
+        			continue;
+        		} else {
+        			mc.add(md5_str);
+        		}
         		Document doc = new Document();
         		doc.add(new TextField("question", last, Store.YES));
         		doc.add(new StoredField("answer", line));
@@ -57,7 +94,9 @@ public class Indexer
         	last = line;
         	lineNum++;
         	if (lineNum % 100000 == 0) {
-        		System.out.println("add doc " + lineNum);
+        		long t = System.currentTimeMillis();
+        		System.out.println("elapse second: " + (t-last_t)/1000 + " add doc " + lineNum + " totalCount:" + totalCount + " dup:" + dupCount);
+        		last_t = t;
         	}
         }
 		br.close();
