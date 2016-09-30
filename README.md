@@ -40,3 +40,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 二十八-脑洞大开：基于美剧字幕的聊天语料库建设方案](http://www.shareditor.com/blogshow/?blogId=105)(2016-08-30)
  * [自己动手做聊天机器人 二十九-重磅：近1GB的三千万聊天语料供出](http://www.shareditor.com/blogshow/?blogId=112)(2016-09-18)
  * [自己动手做聊天机器人 三十-第一版聊天机器人诞生——吃了字幕长大的小二兔](http://www.shareditor.com/blogshow/?blogId=113)(2016-09-26)
+ * [自己动手做聊天机器人 三十一-如何把网站流量导向小二兔机器人](http://www.shareditor.com/blogshow/?blogId=114)(2016-09-30)
