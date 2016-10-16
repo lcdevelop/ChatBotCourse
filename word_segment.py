@@ -18,6 +18,7 @@ def segment(input, output):
             segments = ""
             for str in seg_list:
                 segments = segments + " " + str
+            segments = segments + "\n"
             output_file.write(segments)
         else:
             break
