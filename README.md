@@ -43,3 +43,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 三十一-如何把网站流量导向小二兔机器人](http://www.shareditor.com/blogshow/?blogId=114)(2016-09-30)
  * [自己动手做聊天机器人 三十二-用三千万影视剧字幕语料库生成词向量](http://www.shareditor.com/blogshow/?blogId=115)(2016-10-10)
  * [自己动手做聊天机器人 三十三-两套代码详解LSTM-RNN——有记忆的神经网络](http://www.shareditor.com/blogshow/?blogId=116)(2016-10-13)
+ * [自己动手做聊天机器人 三十四-最快的深度学习框架torch](http://www.shareditor.com/blogshow/?blogId=117)(2016-10-28)
