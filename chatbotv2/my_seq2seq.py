@@ -121,13 +121,17 @@ class MySeq2Seq(object):
         init_seq()
         xy_data = []
         y_data = []
-        for i in range(10,30,10):
+        for i in range(30,40,10):
             # 问句、答句都是16字，所以取32个
             start = i*self.max_seq_len*2
             middle = i*self.max_seq_len*2 + self.max_seq_len
             end = (i+1)*self.max_seq_len*2
             sequence_xy = seq[start:end]
             sequence_y = seq[middle:end]
+            print "right answer"
+            for w in sequence_y:
+                (match_word, max_cos) = vector2word(w)
+                print match_word
             sequence_y = [np.ones(self.word_vec_dim)] + sequence_y
             xy_data.append(sequence_xy)
             y_data.append(sequence_y)
@@ -179,7 +183,7 @@ class MySeq2Seq(object):
     def train(self):
         trainXY, trainY = self.generate_trainig_data()
         model = self.model(feed_previous=False)
-        model.fit(trainXY, trainY, n_epoch=100, snapshot_epoch=False)
+        model.fit(trainXY, trainY, n_epoch=1000, snapshot_epoch=False)
         model.save('./model/model')
         return model
 
@@ -189,6 +193,16 @@ class MySeq2Seq(object):
         return model
 
 if __name__ == '__main__':
+    phrase = sys.argv[1]
     my_seq2seq = MySeq2Seq(word_vec_dim=word_vec_dim, max_seq_len=max_seq_len)
-    my_seq2seq.train()
-    #model = my_seq2seq.load()
+    if phrase == 'train':
+        my_seq2seq.train()
+    else:
+        model = my_seq2seq.load()
+        trainXY, trainY = my_seq2seq.generate_trainig_data()
+        predict = model.predict(trainXY)
+        for sample in predict:
+            print "predict answer"
+            for w in sample[1:]:
+                (match_word, max_cos) = vector2word(w)
+                print match_word, max_cos
