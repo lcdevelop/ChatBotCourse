@@ -15,6 +15,8 @@ seq = []
 max_w = 50
 float_size = 4
 word_vector_dict = {}
+word_vec_dim = 200
+max_seq_len = 16
 
 def load_vectors(input):
     """从vectors.bin加载词向量，返回一个word_vector_dict的词典，key是词，value是200维的向量
@@ -51,8 +53,8 @@ def load_vectors(input):
             vector.append(float(weight))
 
         # 将词及其对应的向量存到dict中
-        word_vector_dict[word.decode('utf-8')] = vector
-        #word_vector_dict[word.decode('utf-8')] = vector[0:4]
+        #word_vector_dict[word.decode('utf-8')] = vector
+        word_vector_dict[word.decode('utf-8')] = vector[0:word_vec_dim]
 
     input_file.close()
 
@@ -110,9 +112,9 @@ class MySeq2Seq(object):
     输出的时候把解码器的输出按照词向量的200维展平，这样输出就是(?,seqlen*200)
     这样就可以通过regression来做回归计算了，输入的y也展平，保持一致
     """
-    def __init__(self, max_seq_len = 16):
+    def __init__(self, max_seq_len = 16, word_vec_dim = 200):
         self.max_seq_len = max_seq_len
-        self.word_vec_dim = 200
+        self.word_vec_dim = word_vec_dim
 
     def generate_trainig_data(self):
         load_vectors("./vectors.bin")
@@ -132,51 +134,6 @@ class MySeq2Seq(object):
 
         return np.array(xy_data), np.array(y_data)
 
-    def embedding_rnn_seq2seq(self, encoder_inputs,
-            decoder_inputs,
-            cell,
-            output_projection=None,
-            feed_previous=False,
-            dtype=None,
-            scope=None):
-        _, encoder_state = rnn.rnn(cell, encoder_inputs, dtype=dtype, scope=scope)
-
-    def model_bak(self, feed_previous=False):
-        # 通过输入的XY生成encoder_inputs和带GO头的decoder_inputs
-        input_data = tflearn.input_data(shape=[None, self.max_seq_len*2, self.word_vec_dim], dtype=tf.float32, name = "XY")
-        encoder_inputs = tf.slice(input_data, [0, 0, 0], [-1, self.max_seq_len, self.word_vec_dim], name="enc_in")
-        decoder_inputs_tmp = tf.slice(input_data, [0, self.max_seq_len, 0], [-1, self.max_seq_len-1, self.word_vec_dim], name="dec_in_tmp")
-        go_inputs = tf.zeros_like(decoder_inputs_tmp)
-        go_inputs = tf.slice(go_inputs, [0, 0, 0], [-1, 1, self.word_vec_dim])
-        decoder_inputs = tf.concat(1, [go_inputs, decoder_inputs_tmp], name="dec_in")
-
-        # 编码器
-        # 把encoder_inputs交给编码器，返回一个输出(预测序列的第一个值)和一个状态(传给解码器)
-        (encoder_output_tensor, states) = tflearn.lstm(encoder_inputs, 200, return_state=True, scope='encoder_lstm')
-        encoder_output_sequence = tf.pack([encoder_output_tensor], axis=1)
-
-        # 解码器
-        if feed_previous:
-            # 预测过程用前一个时间序的输出作为下一个时间序的输入
-            # 先用编码器的最后一个输出作为第一个输入
-            decoder_output_tensor = tflearn.lstm(encoder_output_sequence, 200, initial_state=states, return_seq=False, reuse=False, scope='decoder_lstm')
-            decoder_output_sequence_single = tf.pack([decoder_output_tensor], axis=1)
-            decoder_output_sequence_list = [decoder_output_tensor]
-            # 再用解码器的输出作为下一个时序的输入
-            for i in range(self.max_seq_len-1):
-                decoder_output_tensor = tflearn.lstm(decoder_output_sequence_single, 200, return_seq=False, reuse=True, scope='decoder_lstm')
-                decoder_output_sequence_single = tf.pack([decoder_output_tensor], axis=1)
-                decoder_output_sequence_list.append(decoder_output_tensor)
-        else:
-            # 把decoder_inputs交给解码器，返回一个输出序列
-            decoder_output_sequence_list = tflearn.lstm(decoder_inputs, 200, initial_state=states, return_seq=True, reuse=False, scope='decoder_lstm')
-
-        decoder_output_sequence = tf.pack(decoder_output_sequence_list, axis=1)
-        real_output_sequence = tf.concat(1, [encoder_output_sequence, decoder_output_sequence])
-
-        net = tflearn.regression(real_output_sequence, optimizer='sgd', learning_rate=0.1, loss='mean_square')
-        model = tflearn.DNN(net)
-        return model
 
     def model(self, feed_previous=False):
         # 通过输入的XY生成encoder_inputs和带GO头的decoder_inputs
@@ -189,7 +146,7 @@ class MySeq2Seq(object):
 
         # 编码器
         # 把encoder_inputs交给编码器，返回一个输出(预测序列的第一个值)和一个状态(传给解码器)
-        (encoder_output_tensor, states) = tflearn.lstm(encoder_inputs, 200, return_state=True, scope='encoder_lstm')
+        (encoder_output_tensor, states) = tflearn.lstm(encoder_inputs, self.word_vec_dim, return_state=True, scope='encoder_lstm')
         encoder_output_sequence = tf.pack([encoder_output_tensor], axis=1)
 
         # 解码器
@@ -199,7 +156,7 @@ class MySeq2Seq(object):
             first_dec_input = go_inputs
         else:
             first_dec_input = tf.slice(decoder_inputs, [0, 0, 0], [-1, 1, self.word_vec_dim])
-        decoder_output_tensor = tflearn.lstm(first_dec_input, 200, initial_state=states, return_seq=False, reuse=False, scope='decoder_lstm')
+        decoder_output_tensor = tflearn.lstm(first_dec_input, self.word_vec_dim, initial_state=states, return_seq=False, reuse=False, scope='decoder_lstm')
         decoder_output_sequence_single = tf.pack([decoder_output_tensor], axis=1)
         decoder_output_sequence_list = [decoder_output_tensor]
         # 再用解码器的输出作为下一个时序的输入
@@ -208,7 +165,7 @@ class MySeq2Seq(object):
                 next_dec_input = decoder_output_sequence_single
             else:
                 next_dec_input = tf.slice(decoder_inputs, [0, i+1, 0], [-1, 1, self.word_vec_dim])
-            decoder_output_tensor = tflearn.lstm(next_dec_input, 200, return_seq=False, reuse=True, scope='decoder_lstm')
+            decoder_output_tensor = tflearn.lstm(next_dec_input, self.word_vec_dim, return_seq=False, reuse=True, scope='decoder_lstm')
             decoder_output_sequence_single = tf.pack([decoder_output_tensor], axis=1)
             decoder_output_sequence_list.append(decoder_output_tensor)
 
@@ -232,6 +189,6 @@ class MySeq2Seq(object):
         return model
 
 if __name__ == '__main__':
-    my_seq2seq = MySeq2Seq()
+    my_seq2seq = MySeq2Seq(word_vec_dim=word_vec_dim, max_seq_len=max_seq_len)
     my_seq2seq.train()
     #model = my_seq2seq.load()
