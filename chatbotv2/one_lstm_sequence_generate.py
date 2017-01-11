@@ -106,7 +106,7 @@ def main():
     ylist = []
     test_X = None
     #for i in range(len(seq)-100):
-    for i in range(10):
+    for i in range(1000):
         sequence = seq[i:i+20]
         xlist.append(sequence)
         ylist.append(seq[i+20])
@@ -123,7 +123,7 @@ def main():
     net = tflearn.regression(net, optimizer='sgd', learning_rate=0.1,
                                      loss='mean_square')
     model = tflearn.DNN(net)
-    model.fit(X, Y, n_epoch=500, batch_size=10,snapshot_epoch=False,show_metric=True)
+    model.fit(X, Y, n_epoch=500, batch_size=100,snapshot_epoch=False,show_metric=True)
     model.save("model")
     predict = model.predict([test_X])
     #print predict

@@ -76,7 +76,7 @@ def create_model(max_word_id, is_test=False):
     decoder_inputs = tf.slice(network, [0, max_seq_len], [-1, max_seq_len], name="dec_in")
     decoder_inputs = tf.unpack(decoder_inputs, axis=1)
     go_input = tf.mul( tf.ones_like(decoder_inputs[0], dtype=tf.int32), GO_VALUE )
-    decoder_inputs = [go_input] + decoder_inputs[: max_seq_len-1]
+    decoder_inputs = [go_input] + decoder_inputs[: max_max_seq_len-1]
     num_encoder_symbols = max_word_id + 1 # 从0起始
     num_decoder_symbols = max_word_id + 2 # 包括GO
 
@@ -96,7 +96,7 @@ def create_model(max_word_id, is_test=False):
 
 
 
-    targetY = tf.placeholder(shape=[None, max_seq_len], dtype=tf.int32, name="Y")
+    targetY = tf.placeholder(shape=[None, max_seq_len], dtype=tf.float32, name="Y")
 
     network = tflearn.regression(
             network,
