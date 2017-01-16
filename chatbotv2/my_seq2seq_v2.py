@@ -16,7 +16,6 @@ answer_seqs = []
 max_w = 50
 float_size = 4
 word_vector_dict = {}
-trained_word_vector_dict = {}
 word_vec_dim = 200
 max_seq_len = 8
 word_set = {}
@@ -96,11 +95,9 @@ def init_seq(input_file):
             for word in line_question.decode('utf-8').split(' '):
                 if word_vector_dict.has_key(word):
                     question_seq.append(word_vector_dict[word])
-                    trained_word_vector_dict[word] = word_vector_dict[word]
             for word in line_answer.decode('utf-8').split(' '):
                 if word_vector_dict.has_key(word):
                     answer_seq.append(word_vector_dict[word])
-                    trained_word_vector_dict[word] = word_vector_dict[word]
         else:
             break
         question_seqs.append(question_seq)
