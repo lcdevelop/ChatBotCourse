@@ -48,3 +48,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 三十六-深入理解tensorflow的session和graph](http://www.shareditor.com/blogshow/?blogId=119)(2016-12-01)
  * [自己动手做聊天机器人 三十七-一张图了解tensorflow中的线性回归工作原理](http://www.shareditor.com/blogshow/?blogId=120)(2016-12-08)
  * [自己动手做聊天机器人 三十八-原来聊天机器人是这么做出来的](http://www.shareditor.com/blogshow/?blogId=121)(2017-01-10)
+ * [自己动手做聊天机器人 三十九-满腔热血：在家里搭建一台GPU云服务共享给人工智能和大数据爱好者](http://www.shareditor.com/blogshow/?blogId=122)(2017-01-16)
