@@ -4,14 +4,17 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import os
+from subprocess import call
 
+DOWNLOAD_CMD = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), 'save.sh')
 
 class SubtitleCrawlerPipeline(object):
+    '''
+    Download Subtitle with curl
+    '''
     def process_item(self, item, spider):
         url = item['url']
-        file_name = url.replace('/','_').replace(':','_')
-        fp = open('result/'+file_name, 'w')
-        fp.write(item['body'])
-        fp.close()
+        call([DOWNLOAD_CMD, url])
         return item
-
