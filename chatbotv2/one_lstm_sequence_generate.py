@@ -123,7 +123,7 @@ def main():
     net = tflearn.regression(net, optimizer='sgd', learning_rate=0.1,
                                      loss='mean_square')
     model = tflearn.DNN(net)
-    model.fit(X, Y, n_epoch=500, batch_size=100,snapshot_epoch=False,show_metric=True)
+    model.fit(X, Y, n_epoch=1000, batch_size=1,snapshot_epoch=False,show_metric=True)
     model.save("model")
     predict = model.predict([test_X])
     #print predict
