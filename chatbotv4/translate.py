@@ -1,31 +1,9 @@
-# Copyright 2015 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-
-"""Binary for training translation models and decoding from them.
-
-Running this program without --decode will download the WMT corpus into
-the directory specified as --data_dir and tokenize it in a very basic way,
-and then start training a model saving checkpoints to --train_dir.
-
-Running with --decode starts an interactive loop so you can see how
-the current checkpoint translates English sentences into French.
-
+# coding:utf-8
+"""
 See the following papers for more information on neural translation models.
- * http://arxiv.org/abs/1409.3215
- * http://arxiv.org/abs/1409.0473
- * http://arxiv.org/abs/1412.2007
+ * http://arxiv.org/abs/1409.3215 <Sequence to Sequence Learning with Neural Networks>
+ * http://arxiv.org/abs/1409.0473 <Neural Machine Translation by Jointly Learning to Align and Translate>
+ * http://arxiv.org/abs/1412.2007 <On Using Very Large Target Vocabulary for Neural Machine Translation>
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -47,22 +25,28 @@ import seq2seq_model
 
 
 tf.app.flags.DEFINE_float("learning_rate", 0.5, "Learning rate.")
+
+# 最近三次step如果效果不好就把learning_rate乘以learning_rate_decay_factor
 tf.app.flags.DEFINE_float("learning_rate_decay_factor", 0.9,
                           "Learning rate decays by this much.")
+
+# 为了避免梯度爆炸或梯度消失，目的让权重的更新限制在一定范围内
 tf.app.flags.DEFINE_float("max_gradient_norm", 5.0,
                           "Clip gradients to this norm.")
+
 tf.app.flags.DEFINE_integer("batch_size", 1,
                             "Batch size to use during training.")
 tf.app.flags.DEFINE_integer("size", 1024, "Size of each model layer.")
 tf.app.flags.DEFINE_integer("num_layers", 3, "Number of layers in the model.")
-tf.app.flags.DEFINE_integer("from_vocab_size", 50, "English vocabulary size.")
-tf.app.flags.DEFINE_integer("to_vocab_size", 50, "French vocabulary size.")
+tf.app.flags.DEFINE_integer("input_vocab_size", 50, "input vocabulary size.")
+tf.app.flags.DEFINE_integer("output_vocab_size", 50, "output vocabulary size.")
+
+# 保存训练样本和测试样本
 tf.app.flags.DEFINE_string("data_dir", "./data/", "Data directory")
+
+# 保存checkpoint数据
 tf.app.flags.DEFINE_string("train_dir", "./model/", "Training directory.")
-tf.app.flags.DEFINE_string("from_train_data", None, "Training data.")
-tf.app.flags.DEFINE_string("to_train_data", None, "Training data.")
-tf.app.flags.DEFINE_string("from_dev_data", None, "Training data.")
-tf.app.flags.DEFINE_string("to_dev_data", None, "Training data.")
+
 tf.app.flags.DEFINE_integer("max_train_data_size", 0,
                             "Limit on the size of training data (0: no limit).")
 tf.app.flags.DEFINE_integer("steps_per_checkpoint", 1,
@@ -71,13 +55,9 @@ tf.app.flags.DEFINE_boolean("decode", False,
                             "Set to True for interactive decoding.")
 tf.app.flags.DEFINE_boolean("self_test", False,
                             "Run a self-test if this is set to True.")
-tf.app.flags.DEFINE_boolean("use_fp16", False,
-                            "Train using fp16 instead of fp32.")
 
 FLAGS = tf.app.flags.FLAGS
 
-# We use a number of buckets and pad to the closest one for efficiency.
-# See seq2seq_model.Seq2SeqModel for details of how they work.
 _buckets = [(5, 5)]
 
 
@@ -121,10 +101,10 @@ def read_data(source_path, target_path, max_size=None):
 
 def create_model(session, forward_only):
   """Create translation model and initialize or load parameters in session."""
-  dtype = tf.float16 if FLAGS.use_fp16 else tf.float32
+  dtype = tf.float32
   model = seq2seq_model.Seq2SeqModel(
-      FLAGS.from_vocab_size,
-      FLAGS.to_vocab_size,
+      FLAGS.input_vocab_size,
+      FLAGS.output_vocab_size,
       _buckets,
       FLAGS.size,
       FLAGS.num_layers,
@@ -145,32 +125,8 @@ def create_model(session, forward_only):
 
 
 def train():
-  """Train a en->fr translation model using WMT data."""
-  from_train = None
-  to_train = None
-  from_dev = None
-  to_dev = None
-  if FLAGS.from_train_data and FLAGS.to_train_data:
-    from_train_data = FLAGS.from_train_data
-    to_train_data = FLAGS.to_train_data
-    from_dev_data = from_train_data
-    to_dev_data = to_train_data
-    if FLAGS.from_dev_data and FLAGS.to_dev_data:
-      from_dev_data = FLAGS.from_dev_data
-      to_dev_data = FLAGS.to_dev_data
-    from_train, to_train, from_dev, to_dev, _, _ = data_utils.prepare_data(
-        FLAGS.data_dir,
-        from_train_data,
-        to_train_data,
-        from_dev_data,
-        to_dev_data,
-        FLAGS.from_vocab_size,
-        FLAGS.to_vocab_size)
-  else:
-      # Prepare WMT data.
-      print("Preparing WMT data in %s" % FLAGS.data_dir)
-      from_train, to_train, from_dev, to_dev, _, _ = data_utils.prepare_wmt_data(
-          FLAGS.data_dir, FLAGS.from_vocab_size, FLAGS.to_vocab_size)
+  input_train, output_train, input_dev, output_dev, _, _ = data_utils.prepare_wmt_data(
+          FLAGS.data_dir, FLAGS.input_vocab_size, FLAGS.output_vocab_size)
 
   with tf.Session() as sess:
     # Create model.
@@ -180,8 +136,8 @@ def train():
     # Read data into buckets and compute their sizes.
     print ("Reading development and training data (limit: %d)."
            % FLAGS.max_train_data_size)
-    dev_set = read_data(from_dev, to_dev)
-    train_set = read_data(from_train, to_train, FLAGS.max_train_data_size)
+    dev_set = read_data(input_dev, output_dev)
+    train_set = read_data(input_train, output_train, FLAGS.max_train_data_size)
     train_bucket_sizes = [len(train_set[b]) for b in xrange(len(_buckets))]
     train_total_size = float(sum(train_bucket_sizes))
 
@@ -250,9 +206,9 @@ def decode():
 
     # Load vocabularies.
     en_vocab_path = os.path.join(FLAGS.data_dir,
-                                 "vocab%d.input" % FLAGS.from_vocab_size)
+                                 "vocab%d.input" % FLAGS.input_vocab_size)
     fr_vocab_path = os.path.join(FLAGS.data_dir,
-                                 "vocab%d.output" % FLAGS.to_vocab_size)
+                                 "vocab%d.output" % FLAGS.output_vocab_size)
     en_vocab, _ = data_utils.initialize_vocabulary(en_vocab_path)
     _, rev_fr_vocab = data_utils.initialize_vocabulary(fr_vocab_path)
 

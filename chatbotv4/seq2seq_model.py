@@ -24,10 +24,10 @@ import random
 import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
+from tensorflow.contrib.legacy_seq2seq.python.ops import seq2seq
 
 import data_utils
-import seq2seq
-
+import seq2seq_patch
 
 class Seq2SeqModel(object):
   """Sequence-to-sequence model with attention and for multiple buckets.
@@ -131,7 +131,7 @@ class Seq2SeqModel(object):
 
     # The seq2seq function: we use embedding for the input and attention.
     def seq2seq_f(encoder_inputs, decoder_inputs, do_decode):
-      return seq2seq.embedding_attention_seq2seq(
+      return seq2seq_patch.embedding_attention_seq2seq(
           encoder_inputs,
           decoder_inputs,
           cell,

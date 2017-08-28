@@ -2,4 +2,4 @@
 python ./translate.py
 
 预测：
-python translate.py --decode True
+python translate.py --decode
