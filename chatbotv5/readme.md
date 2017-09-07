@@ -33,4 +33,4 @@ WARN：词汇不在服务区
 </pre>
 
 ## 代码讲解
-欢迎关注[www.shareditor.com](www.shareditor.com)最新文章
+欢迎关注[www.shareditor.com](http://www.shareditor.com/)最新文章
