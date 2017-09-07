@@ -51,3 +51,4 @@ _欢迎关注我的另外两个github项目_
  * [自己动手做聊天机器人 三十九-满腔热血：在家里搭建一台GPU云服务共享给人工智能和大数据爱好者](http://www.shareditor.com/blogshow/?blogId=122)(2017-01-16)
  * [自己动手做聊天机器人 四十-视频教程之开篇宣言与知识点梳理](http://www.shareditor.com/blogshow/?blogId=124)(2017-03-05)
  * [自己动手做聊天机器人 四十一-视频教程之环境搭建与python基础](http://www.shareditor.com/blogshow/?blogId=125)(2017-03-31)
+ * [自己动手做聊天机器人 四十二-(重量级长文)从理论到实践开发自己的聊天机器人](http://www.shareditor.com/blogshow?blogId=136)(2017-09-07)
