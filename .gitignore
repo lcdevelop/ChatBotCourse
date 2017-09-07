@@ -1,0 +1,19 @@
+# maven
+chatbotv1/target/
+
+# py
+__pycache__/
+*.pyc
+
+# vim
+*.swp
+*.swo
+
+# idea
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# tmp files
+subtitle/subtitle_crawler/result/
