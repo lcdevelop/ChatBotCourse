@@ -1,0 +1,7 @@
+.DS_Store
+.metadata
+.recommenders
+__pycache__
+.classpath
+.project
+.settings
