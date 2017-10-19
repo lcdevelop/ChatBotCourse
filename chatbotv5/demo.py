@@ -7,6 +7,7 @@ import tensorflow as tf
 from tensorflow.contrib.legacy_seq2seq.python.ops import seq2seq
 import word_token
 import jieba
+import random
 
 # 输入序列长度
 input_seq_len = 5
@@ -20,17 +21,15 @@ GO_ID = 1
 EOS_ID = 2
 # LSTM神经元size
 size = 8
-# 最大输入符号数
-num_encoder_symbols = 32
-# 最大输出符号数
-num_decoder_symbols = 32
 # 初始学习率
 init_learning_rate = 1
+# 在样本中出现频率超过这个值才会进入词表
+min_freq = 10
 
 wordToken = word_token.WordToken()
 
 # 放在全局的位置，为了动态算出num_encoder_symbols和num_decoder_symbols
-max_token_id = wordToken.load_file_list(['./samples/question', './samples/answer'])
+max_token_id = wordToken.load_file_list(['./samples/question', './samples/answer'], min_freq)
 num_encoder_symbols = max_token_id + 5
 num_decoder_symbols = max_token_id + 5
 
@@ -59,14 +58,15 @@ def get_train_set():
 
                     question_id_list = get_id_list_from(question)
                     answer_id_list = get_id_list_from(answer)
-                    answer_id_list.append(EOS_ID)
-                    train_set.append([question_id_list, answer_id_list])
+                    if len(question_id_list) > 0 and len(answer_id_list) > 0:
+                        answer_id_list.append(EOS_ID)
+                        train_set.append([question_id_list, answer_id_list])
                 else:
                     break
     return train_set
 
 
-def get_samples(train_set):
+def get_samples(train_set, batch_num):
     """构造样本数据
 
     :return:
@@ -78,7 +78,12 @@ def get_samples(train_set):
     # train_set = [[[5, 7, 9], [11, 13, 15, EOS_ID]], [[7, 9, 11], [13, 15, 17, EOS_ID]], [[15, 17, 19], [21, 23, 25, EOS_ID]]]
     raw_encoder_input = []
     raw_decoder_input = []
-    for sample in train_set:
+    if batch_num >= len(train_set):
+        batch_train_set = train_set
+    else:
+        random_start = random.randint(0, len(train_set)-batch_num)
+        batch_train_set = train_set[random_start:random_start+batch_num]
+    for sample in batch_train_set:
         raw_encoder_input.append([PAD_ID] * (input_seq_len - len(sample[0])) + sample[0])
         raw_decoder_input.append([GO_ID] + sample[1] + [PAD_ID] * (output_seq_len - len(sample[1]) - 1))
 
@@ -163,23 +168,22 @@ def train():
     train_set = get_train_set()
     with tf.Session() as sess:
 
-        sample_encoder_inputs, sample_decoder_inputs, sample_target_weights = get_samples(train_set)
         encoder_inputs, decoder_inputs, target_weights, outputs, loss, update, saver, learning_rate_decay_op, learning_rate = get_model()
-
-        input_feed = {}
-        for l in xrange(input_seq_len):
-            input_feed[encoder_inputs[l].name] = sample_encoder_inputs[l]
-        for l in xrange(output_seq_len):
-            input_feed[decoder_inputs[l].name] = sample_decoder_inputs[l]
-            input_feed[target_weights[l].name] = sample_target_weights[l]
-        input_feed[decoder_inputs[output_seq_len].name] = np.zeros([len(sample_decoder_inputs[0])], dtype=np.int32)
 
         # 全部变量初始化
         sess.run(tf.global_variables_initializer())
 
         # 训练很多次迭代，每隔10次打印一次loss，可以看情况直接ctrl+c停止
         previous_losses = []
-        for step in xrange(20700):
+        for step in xrange(20000):
+            sample_encoder_inputs, sample_decoder_inputs, sample_target_weights = get_samples(train_set, 1000)
+            input_feed = {}
+            for l in xrange(input_seq_len):
+                input_feed[encoder_inputs[l].name] = sample_encoder_inputs[l]
+            for l in xrange(output_seq_len):
+                input_feed[decoder_inputs[l].name] = sample_decoder_inputs[l]
+                input_feed[target_weights[l].name] = sample_target_weights[l]
+            input_feed[decoder_inputs[output_seq_len].name] = np.zeros([len(sample_decoder_inputs[0])], dtype=np.int32)
             [loss_ret, _] = sess.run([loss, update], input_feed)
             if step % 10 == 0:
                 print 'step=', step, 'loss=', loss_ret, 'learning_rate=', learning_rate.eval()

@@ -11,7 +11,7 @@ class WordToken(object):
         self.id2word_dict = {}
 
 
-    def load_file_list(self, file_list):
+    def load_file_list(self, file_list, min_freq):
         """
         加载样本文件列表，全部切词后统计词频，按词频由高到低排序后顺次编号
         并存到self.word2id_dict和self.id2word_dict中
@@ -32,6 +32,8 @@ class WordToken(object):
         sorted_list.sort(reverse=True)
         for index, item in enumerate(sorted_list):
             word = item[1]
+            if item[0] < min_freq:
+                break
             self.word2id_dict[word] = self.START_ID + index
             self.id2word_dict[self.START_ID + index] = word
         return index
@@ -44,7 +46,6 @@ class WordToken(object):
             return self.word2id_dict[word]
         else:
             return None
-
 
     def id2word(self, id):
         id = int(id)
