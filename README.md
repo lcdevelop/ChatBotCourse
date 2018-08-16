@@ -8,6 +8,10 @@ _欢迎关注我的另外两个github项目_
  * [_教你成为全栈工程师_](https://github.com/warmheartli/FullStackDeveloperCourse)
  * [_机器学习精简入门教程_](https://github.com/warmheartli/MachineLearningCourse)
 
+智能游戏AI从基础到实战教程
+==============
+ * [智能游戏AI从基础到实战教程 一-发动集体智慧开发游戏AI](http://www.shareditor.com/blogshow?blogId=139)(2018-08-16)
+
 自己动手做聊天机器人教程
 ==============
  * [自己动手做聊天机器人 一-涉及知识](http://www.shareditor.com/blogshow/?blogId=63)(2016-06-09)
