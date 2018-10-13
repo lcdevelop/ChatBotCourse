@@ -71,6 +71,7 @@ int read_images()
     uint64_t values_size = sizeof(unsigned char) * images_num * rows * cols;
     unsigned char *values = (unsigned char*)malloc(values_size);
     fread(values, sizeof(unsigned char), values_size, fp);
+    printf("print the value")
 
     for (int image_index = 0; image_index < images_num; image_index++)
     {
