@@ -4,7 +4,8 @@ _读本人更多原创文章，欢迎关注微信订阅号_
 
 <img src="https://github.com/warmheartli/MachineLearningCourse/blob/master/weixinpub.jpg" width = "150" height = "150" alt="lcsays" />
 
-_欢迎关注我的另外两个github项目_
+_欢迎关注我的另外几个github项目_
+ * [_大数据专家养成记_](https://github.com/warmheartli/bigdatablog)
  * [_教你成为全栈工程师_](https://github.com/warmheartli/FullStackDeveloperCourse)
  * [_机器学习精简入门教程_](https://github.com/warmheartli/MachineLearningCourse)
 
